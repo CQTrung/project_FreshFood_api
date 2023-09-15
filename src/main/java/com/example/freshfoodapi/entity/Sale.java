@@ -1,10 +1,12 @@
 package com.example.freshfoodapi.entity;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import lombok.Getter;
@@ -13,7 +15,7 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 @Entity
-@Table(name = "sale")
+@Table(name = "sales")
 @NoArgsConstructor
 @Getter
 @Setter
@@ -28,5 +30,8 @@ public class Sale extends BaseEntity{
     private Date startDay;
     @Column(name = "endDay")
     private Date endDay;
+
+    @OneToMany(mappedBy = "sale")
+    private List<Product> productList;
 
 }

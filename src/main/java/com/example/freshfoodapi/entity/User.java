@@ -8,6 +8,7 @@ import lombok.experimental.SuperBuilder;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -38,6 +39,14 @@ public class User {
     private String insertedBy;
     @Column(name = "updated_by", nullable = true)
     private String updatedBy;
+    @OneToMany(mappedBy = "order")
+    private List<Order> orderList;
+    @ManyToMany(mappedBy = "userList",cascade = CascadeType.ALL)
+    private List<Voucher> voucherList;
+
+    @OneToOne(mappedBy = "user")
+    private Feedback feedback;
+
     public User(String username, String email, String hashedPassword) {
         this.username = username;
         this.email = email;
