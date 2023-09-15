@@ -8,6 +8,7 @@ import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -29,10 +30,9 @@ public class Order extends BaseEntity {
     private User user;
 
     @OneToMany(mappedBy = "order")
-    @JsonBackReference
     private Set<OrderDetail> orderDetails;
-
-
+    @OneToMany(mappedBy = "order")
+    private Set<Payment> payments;
 
 
 

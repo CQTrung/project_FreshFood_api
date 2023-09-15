@@ -48,6 +48,9 @@ public class Product extends BaseEntity {
                inverseJoinColumns = @JoinColumn(name = "category_id"))
     private List<Category> categoryList;
 
+    @OneToMany(mappedBy = "product")
+    private List<OrderDetail> orderDetailList;
+
 
 
 

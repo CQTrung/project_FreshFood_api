@@ -44,6 +44,9 @@ public class User {
     @ManyToMany(mappedBy = "userList",cascade = CascadeType.ALL)
     private List<Voucher> voucherList;
 
+    @OneToOne(mappedBy = "user")
+    private Feedback feedback;
+
     public User(String username, String email, String hashedPassword) {
         this.username = username;
         this.email = email;
