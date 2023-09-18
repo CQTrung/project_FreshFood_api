@@ -25,12 +25,16 @@ public class Order extends BaseEntity {
     @Column(name = "note")
     private BigDecimal totalPrice;
 
+    @Column(name = "status")
+    private  int status;
+
     @ManyToOne
-    @JoinColumn(name = "user_id",referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @OneToMany(mappedBy = "order")
     private Set<OrderDetail> orderDetails;
+
     @OneToMany(mappedBy = "order")
     private Set<Payment> payments;
 

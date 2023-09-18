@@ -19,14 +19,16 @@ public class Payment {
     private long id;
     @Column(name = "payment_method", nullable = false)
     private String paymentMethod;
+    @Column(name = "status")
+    private  int status;
     @Column(name = "created_time", nullable = true)
     private Date createdTime;
     @Column(name = "updated_time", nullable = true)
+
     private Date updatedTime;
 
     @ManyToOne
-    @JoinColumn(name = "order_id",referencedColumnName = "id", nullable = false)
-    //warehouse_id chính là trường khoá phụ trong table Product liên kết với khóa chính trong table Warehouse
+    @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 
 

@@ -33,13 +33,11 @@ public class Product extends BaseEntity {
     private String madeIn;
 
     @ManyToOne
-    @JoinColumn(name = "warehouse_id",referencedColumnName = "id",nullable = false)
-    //warehouse_id chính là trường khoá phụ trong table Product liên kết với khóa chính trong table Warehouse
+    @JoinColumn(name = "warehouse_id",nullable = false)
     private Warehouse warehouse;
 
     @ManyToOne
-    @JoinColumn(name = "sale_id",referencedColumnName = "id", nullable = false)
-    //warehouse_id chính là trường khoá phụ trong table Product liên kết với khóa chính trong table Warehouse
+    @JoinColumn(name = "sale_id", nullable = false)
     private Sale sale;
 
     @ManyToMany

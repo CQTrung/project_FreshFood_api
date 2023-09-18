@@ -1,6 +1,5 @@
 package com.example.freshfoodapi.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,17 +21,19 @@ public class OrderDetail {
     private long id;
 
     @ManyToOne
-    @JoinColumn(name = "order_id",referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 
     @ManyToOne
-    @JoinColumn(name = "product_id",referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
     private int quantity;
     private BigDecimal unitPrice;
+
     @Column(name = "inserted_time", nullable = true)
     private Date insertedTime;
     @Column(name = "updated_time", nullable = true)
     private Date updatedTime;
+
 }
