@@ -23,7 +23,6 @@ public class OrderDetail {
 
     @ManyToOne
     @JoinColumn(name = "order_id",referencedColumnName = "id", nullable = false)
-    //warehouse_id chính là trường khoá phụ trong table Product liên kết với khóa chính trong table Warehouse
     private Order order;
 
     @ManyToOne
