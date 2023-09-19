@@ -39,8 +39,10 @@ public class User {
     private String insertedBy;
     @Column(name = "updated_by", nullable = true)
     private String updatedBy;
-    @OneToMany(mappedBy = "order")
+
+    @OneToMany(mappedBy = "user")
     private List<Order> orderList;
+
     @ManyToMany(mappedBy = "userList",cascade = CascadeType.ALL)
     private List<Voucher> voucherList;
 
