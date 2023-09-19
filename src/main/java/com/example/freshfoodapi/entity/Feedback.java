@@ -1,37 +1,34 @@
 package com.example.freshfoodapi.entity;
 
-import java.util.Date;
-import java.util.List;
-
-import javax.persistence.*;
-
-import lombok.Getter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-@Entity
-@Table(name = "sale")
+import javax.persistence.*;
+import java.util.Date;
+
+@Entity()
+@Table(name = "feedback")
+@Data
+@AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
 @SuperBuilder
-public class Sale {
+public class Feedback {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private long id;
-    @Column(name = "persent")
-    private String persent;
-    @Column(name = "codeSale")
-    private String codeSale;
-    @Column(name = "startDay")
-    private Date startDay;
-    @Column(name = "endDay")
-    private Date endDay;
+    @Column(name = "subject_name", nullable = true)
+    private String subjectName;
+    @Column(name = "note", nullable = false)
+    private String note;
 
-    @OneToMany(mappedBy = "sale")
-    private List<Product> productList;
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    @MapsId
+    private User user;
+
     @Column(name = "inserted_time", nullable = true)
     private Date insertedTime;
     @Column(name = "updated_time", nullable = true)

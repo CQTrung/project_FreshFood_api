@@ -1,37 +1,31 @@
 package com.example.freshfoodapi.entity;
 
-import java.util.Date;
-import java.util.List;
-
-import javax.persistence.*;
-
-import lombok.Getter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-@Entity
-@Table(name = "sale")
+import javax.persistence.*;
+import java.util.Date;
+
+@Entity()
+@Table(name = "payments")
+@Data
+@AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
 @SuperBuilder
-public class Sale {
+public class Payment{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private long id;
-    @Column(name = "persent")
-    private String persent;
-    @Column(name = "codeSale")
-    private String codeSale;
-    @Column(name = "startDay")
-    private Date startDay;
-    @Column(name = "endDay")
-    private Date endDay;
-
-    @OneToMany(mappedBy = "sale")
-    private List<Product> productList;
+    @Column(name = "payment_method", nullable = false)
+    private String paymentMethod;
+    @Column(name = "status")
+    private  int status;
+    @ManyToOne
+    @JoinColumn(name = "order_id", nullable = false)
+    private Order order;
     @Column(name = "inserted_time", nullable = true)
     private Date insertedTime;
     @Column(name = "updated_time", nullable = true)
@@ -50,5 +44,6 @@ public class Sale {
     private void beforeUpdate() {
         this.updatedTime = new Date();
     }
+
 
 }
