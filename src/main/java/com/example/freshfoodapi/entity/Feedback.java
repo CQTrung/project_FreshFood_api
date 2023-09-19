@@ -8,14 +8,16 @@ import lombok.experimental.SuperBuilder;
 import javax.persistence.*;
 import java.util.Date;
 
+@Entity()
+@Table(name = "feedback")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "feedbacks")
 @SuperBuilder
-public class Feedback extends BaseEntity {
+public class Feedback {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private long id;
     @Column(name = "subject_name", nullable = true)
     private String subjectName;
@@ -27,5 +29,23 @@ public class Feedback extends BaseEntity {
     @MapsId
     private User user;
 
+    @Column(name = "inserted_time", nullable = true)
+    private Date insertedTime;
+    @Column(name = "updated_time", nullable = true)
+    private Date updatedTime;
+
+    @Column(name = "isDeleted", nullable = true)
+    private Boolean isDeleted;
+
+    @PrePersist
+    private void beforeInsert() {
+        this.insertedTime = new Date();
+        this.isDeleted = false;
+    }
+
+    @PreUpdate
+    private void beforeUpdate() {
+        this.updatedTime = new Date();
+    }
 
 }

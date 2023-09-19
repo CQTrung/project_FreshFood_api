@@ -18,7 +18,7 @@ import java.util.List;
 @SuperBuilder
 public class ProductDto extends PageDto{
     private long id;
-    private String productName;
+    private String name;
     private BigDecimal price;
     private float weight;
     private String description;

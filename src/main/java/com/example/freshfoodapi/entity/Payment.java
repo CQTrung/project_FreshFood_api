@@ -8,28 +8,42 @@ import lombok.experimental.SuperBuilder;
 import javax.persistence.*;
 import java.util.Date;
 
+@Entity()
+@Table(name = "payments")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "payments")
 @SuperBuilder
-public class Payment {
+public class Payment{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private long id;
     @Column(name = "payment_method", nullable = false)
     private String paymentMethod;
     @Column(name = "status")
     private  int status;
-    @Column(name = "created_time", nullable = true)
-    private Date createdTime;
-    @Column(name = "updated_time", nullable = true)
-
-    private Date updatedTime;
-
     @ManyToOne
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;
+    @Column(name = "inserted_time", nullable = true)
+    private Date insertedTime;
+    @Column(name = "updated_time", nullable = true)
+    private Date updatedTime;
+
+    @Column(name = "isDeleted", nullable = true)
+    private Boolean isDeleted;
+
+    @PrePersist
+    private void beforeInsert() {
+        this.insertedTime = new Date();
+        this.isDeleted = false;
+    }
+
+    @PreUpdate
+    private void beforeUpdate() {
+        this.updatedTime = new Date();
+    }
 
 
 }
