@@ -8,6 +8,31 @@ import lombok.experimental.SuperBuilder;
 import javax.persistence.*;
 import java.util.Date;
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity(name = "payments")
+@SuperBuilder
+public class Payment {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+    @Column(name = "payment_method", nullable = false)
+    private String paymentMethod;
+    @Column(name = "created_time", nullable = true)
+    private Date createdTime;
+    @Column(name = "updated_time", nullable = true)
+    private Date updatedTime;
+
+    @ManyToOne
+    @JoinColumn(name = "order_id",referencedColumnName = "id", nullable = false)
+    //warehouse_id chính là trường khoá phụ trong table Product liên kết với khóa chính trong table Warehouse
+    private Order order;
+=======
+>>>>>>> duc29
 @Entity()
 @Table(name = "payments")
 @Data
@@ -44,6 +69,10 @@ public class Payment{
     private void beforeUpdate() {
         this.updatedTime = new Date();
     }
+<<<<<<< HEAD
+=======
+>>>>>>> b54d56492e30cd1470fd67bacdcaa7da428c7876
+>>>>>>> duc29
 
 
 }

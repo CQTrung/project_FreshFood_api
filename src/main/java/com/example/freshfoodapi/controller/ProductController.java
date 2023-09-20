@@ -1,14 +1,30 @@
 package com.example.freshfoodapi.controller;
 
+<<<<<<< HEAD
 import com.example.freshfoodapi.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+=======
+import com.example.freshfoodapi.dto.RestErrorDto;
+import com.example.freshfoodapi.entity.Product;
+import com.example.freshfoodapi.exception.BusinessException;
+import com.example.freshfoodapi.service.ProductService;
+import com.example.freshfoodapi.service.impl.ProductServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+>>>>>>> duc29
 
 @RestController
 @RequestMapping(value = "api/v1/product")
 public class ProductController {
     @Autowired
+<<<<<<< HEAD
     ProductService service;
+=======
+    ProductServiceImpl productService;
+>>>>>>> duc29
 
 }

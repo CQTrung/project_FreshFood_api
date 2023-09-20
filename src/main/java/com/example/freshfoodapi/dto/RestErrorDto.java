@@ -5,10 +5,13 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class RestErrorDto {
-    String errorCode;
-    String message;
-    Object data;
+public class RestErrorDto<C> {
+    private String errorCode;
+    private String message;
+    private Object data;
+
+    public RestErrorDto() {
+    }
 
     public RestErrorDto(String errorCode, String message, Object data) {
         this.errorCode = errorCode;

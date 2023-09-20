@@ -16,6 +16,23 @@ import java.util.Date;
 @NoArgsConstructor
 @SuperBuilder
 public class OrderDetail {
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
+    @ManyToOne
+    @JoinColumn(name = "order_id",referencedColumnName = "id", nullable = false)
+    //warehouse_id chính là trường khoá phụ trong table Product liên kết với khóa chính trong table Warehouse
+    private Order order;
+
+    @ManyToOne
+    @JoinColumn(name = "product_id",referencedColumnName = "id", nullable = false)
+=======
+>>>>>>> duc29
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -26,6 +43,10 @@ public class OrderDetail {
 
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
+<<<<<<< HEAD
+=======
+>>>>>>> b54d56492e30cd1470fd67bacdcaa7da428c7876
+>>>>>>> duc29
     private Product product;
     private int quantity;
     private BigDecimal unitPrice;
