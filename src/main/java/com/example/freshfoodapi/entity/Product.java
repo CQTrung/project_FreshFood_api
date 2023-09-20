@@ -50,20 +50,12 @@ public class Product {
 
     @OneToMany(mappedBy = "product")
     private List<OrderDetail> orderDetailList;
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
 
-=======
->>>>>>> duc29
     @Column(name = "inserted_time", nullable = true)
     private Date insertedTime;
     @Column(name = "updated_time", nullable = true)
     private Date updatedTime;
-<<<<<<< HEAD
-=======
->>>>>>> b54d56492e30cd1470fd67bacdcaa7da428c7876
->>>>>>> duc29
+
 
     @Column(name = "isDeleted", nullable = true)
     private Boolean isDeleted;

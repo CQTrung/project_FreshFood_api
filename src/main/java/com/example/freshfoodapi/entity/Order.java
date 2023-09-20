@@ -8,14 +8,9 @@ import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-<<<<<<< HEAD
+
 import java.util.Date;
-=======
-<<<<<<< HEAD
-=======
-import java.util.Date;
->>>>>>> b54d56492e30cd1470fd67bacdcaa7da428c7876
->>>>>>> duc29
+
 import java.util.List;
 import java.util.Set;
 
@@ -44,13 +39,6 @@ public class Order  {
 
     @OneToMany(mappedBy = "order")
     private Set<OrderDetail> orderDetails;
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-    @OneToMany(mappedBy = "order")
-    private Set<Payment> payments;
-=======
->>>>>>> duc29
 
     @OneToMany(mappedBy = "order")
     private Set<Payment> payments;
@@ -59,10 +47,7 @@ public class Order  {
     private Date insertedTime;
     @Column(name = "updated_time", nullable = true)
     private Date updatedTime;
-<<<<<<< HEAD
-=======
->>>>>>> b54d56492e30cd1470fd67bacdcaa7da428c7876
->>>>>>> duc29
+
 
     @Column(name = "isDeleted", nullable = true)
     private Boolean isDeleted;

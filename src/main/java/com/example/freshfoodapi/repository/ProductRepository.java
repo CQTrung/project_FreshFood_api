@@ -1,14 +1,6 @@
 package com.example.freshfoodapi.repository;
 
-<<<<<<< HEAD
-import com.example.freshfoodapi.entity.Product;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.stereotype.Repository;
 
-@Repository
-public interface ProductRepository extends JpaRepository<Product,Long>, JpaSpecificationExecutor {
-=======
 import com.example.freshfoodapi.dto.ProductDto;
 import com.example.freshfoodapi.entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -29,5 +21,4 @@ public interface ProductRepository extends JpaRepository<Product,Long>, JpaSpeci
     Optional<ProductDto> findByName(String name);
 
     List<ProductDto> findAllProduct();
->>>>>>> duc29
 }

@@ -1,12 +1,6 @@
 package com.example.freshfoodapi.service.impl;
 
-<<<<<<< HEAD
-import com.example.freshfoodapi.service.ProductService;
-import org.springframework.stereotype.Service;
 
-@Service
-public class ProductServiceImpl implements ProductService {
-=======
 import com.example.freshfoodapi.dto.ProductDto;
 import com.example.freshfoodapi.dto.RestErrorDto;
 import com.example.freshfoodapi.entity.Product;
@@ -25,5 +19,4 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     ProductRepository productRepository;
 
->>>>>>> duc29
 }
