@@ -24,6 +24,10 @@ public class Voucher {
     private String voucherCode;
     @Column(name = "value")
     private Float value;
+    @Column(name = "startDay")
+    private Date startDay;
+    @Column(name = "endDay")
+    private Date endDay;
 
     @ManyToMany
     @JoinTable(name = "user_voucher",
