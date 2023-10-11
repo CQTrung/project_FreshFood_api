@@ -21,15 +21,11 @@ public class OrderDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
-
     @ManyToOne
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;
-
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
-
     private Product product;
     private int quantity;
     private BigDecimal unitPrice;

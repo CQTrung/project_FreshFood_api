@@ -20,10 +20,14 @@ public class Voucher {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private long id;
-    @Column(name = "voucherCode")
+    @Column(name = "voucherCode",unique = true)
     private String voucherCode;
-    @Column(name = "value")
-    private Float value;
+    @Column(name = "discount")
+    private int discount;
+    @Column(name = "startDay")
+    private Date startDay;
+    @Column(name = "endDay")
+    private Date endDay;
 
     @ManyToMany
     @JoinTable(name = "user_voucher",

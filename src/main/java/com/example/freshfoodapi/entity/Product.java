@@ -33,6 +33,10 @@ public class Product {
     private String image;
     @Column(name = "madein")
     private String madeIn;
+    @Column(name = "mfgDate")
+    private  String mfgDate;
+    @Column(name = "expiryDate")
+    private Date expiryDate;
 
     @ManyToOne
     @JoinColumn(name = "warehouse_id")

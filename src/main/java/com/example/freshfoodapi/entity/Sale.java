@@ -21,9 +21,9 @@ public class Sale {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private long id;
-    @Column(name = "persent")
-    private String persent;
-    @Column(name = "codeSale")
+    @Column(name = "discount")
+    private int discount;
+    @Column(name = "codeSale",unique = true)
     private String codeSale;
     @Column(name = "startDay")
     private Date startDay;

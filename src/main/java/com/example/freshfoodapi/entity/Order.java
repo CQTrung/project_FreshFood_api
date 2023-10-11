@@ -38,10 +38,10 @@ public class Order  {
     private User user;
 
     @OneToMany(mappedBy = "order")
-    private Set<OrderDetail> orderDetails;
+    private List<OrderDetail> orderDetails;
 
     @OneToMany(mappedBy = "order")
-    private Set<Payment> payments;
+    private List<Payment> payments;
 
     @Column(name = "inserted_time", nullable = true)
     private Date insertedTime;

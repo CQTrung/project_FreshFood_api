@@ -20,10 +20,11 @@ public class Warehouse  {
     @Column(name = "id")
     private long id;
     @Column(name = "quantity")
-    private String productName;
+    private int quantity;
 
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "warehouse")
     private List<Product>productList;
+
     @Column(name = "inserted_time", nullable = true)
     private Date insertedTime;
     @Column(name = "updated_time", nullable = true)
