@@ -66,7 +66,10 @@ public class SaleServiceImpl implements SaleService {
             repository.save(sale);
             return  mapper.entityToDto(sale);
         }
-
+        Sale sale = repository.findByCodeSaleAndIsDeletedFalse(saleDto.getCodeSale());
+        if(sale != null){
+            throw  new BusinessException("code sale does exist");
+        }
         Sale result = repository.save(mapper.dtoToEntity(saleDto));
         return mapper.entityToDto(result);
     }

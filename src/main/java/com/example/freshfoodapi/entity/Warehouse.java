@@ -1,10 +1,14 @@
 package com.example.freshfoodapi.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -14,7 +18,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Warehouse  {
+public class Warehouse  implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -23,6 +27,7 @@ public class Warehouse  {
     private int quantity;
 
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "warehouse")
+    @JsonManagedReference(value = "productList")
     private List<Product>productList;
 
     @Column(name = "inserted_time", nullable = true)

@@ -1,11 +1,13 @@
 package com.example.freshfoodapi.entity;
 
+import com.fasterxml.jackson.annotation.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -16,7 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
-public class Product {
+public class Product implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -24,35 +26,33 @@ public class Product {
     @Column(name = "name", nullable = false)
     private String name;
     @Column(name = "price")
-    private BigDecimal price;
+    private int price;
     @Column(name = "weight")
     private float weight;
     @Column(name = "description")
     private String description;
     @Column(name = "image")
     private String image;
-    @Column(name = "madein")
+    @Column(name = "madeIn")
     private String madeIn;
-    @Column(name = "mfgDate")
-    private  String mfgDate;
-    @Column(name = "expiryDate")
-    private Date expiryDate;
 
     @ManyToOne
     @JoinColumn(name = "warehouse_id")
+    @JsonBackReference(value = "warehouse")
     private Warehouse warehouse;
 
     @ManyToOne
-    @JoinColumn(name = "sale_id", nullable = false)
+    @JoinColumn(name = "sale_id")
+    @JsonBackReference(value = "sale")
     private Sale sale;
 
-    @ManyToMany
-    @JoinTable(name = "category_product",
-               joinColumns = @JoinColumn(name = "product_id"),
-               inverseJoinColumns = @JoinColumn(name = "category_id"))
-    private List<Category> categoryList;
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    @JsonBackReference(value = "category")
+    private Category category;
 
     @OneToMany(mappedBy = "product")
+    @JsonManagedReference(value = "orderDetailList")
     private List<OrderDetail> orderDetailList;
 
     @Column(name = "inserted_time", nullable = true)

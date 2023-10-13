@@ -8,6 +8,7 @@ import lombok.experimental.SuperBuilder;
 
 @Data
 @SuperBuilder
+@AllArgsConstructor
 public class CategoryDto extends PageDto{
     private  long id;
     private  String name;

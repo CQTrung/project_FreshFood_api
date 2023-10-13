@@ -19,5 +19,5 @@ public class FeedbackDto extends PageDto{
     private long id;
     private String subjectName;
     private String note;
-    private User user;
+    private long userId;
 }

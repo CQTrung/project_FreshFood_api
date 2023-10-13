@@ -1,13 +1,14 @@
-package com.example.freshfoodapi.dto;
+package com.example.freshfoodapi.dto.response;
 
+import com.example.freshfoodapi.dto.PageDto;
 import com.example.freshfoodapi.entity.Category;
 import com.example.freshfoodapi.entity.OrderDetail;
 import com.example.freshfoodapi.entity.Sale;
 import com.example.freshfoodapi.entity.Warehouse;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
@@ -18,7 +19,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @SuperBuilder
-public class ProductDto extends PageDto{
+public class ProductResponse extends PageDto {
     private long id;
     private String name;
     private int price;
@@ -26,7 +27,8 @@ public class ProductDto extends PageDto{
     private String description;
     private String image;
     private String madeIn;
-    private long categoryId;
-    private long warehouseId;
-    private long saleId;
+    private Category category;
+    private Warehouse warehouse;
+    private Sale sale;
+    private List<OrderDetail> orderDetailList;
 }

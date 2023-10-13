@@ -1,5 +1,6 @@
 package com.example.freshfoodapi.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,6 +27,7 @@ public class Payment{
     private  int status;
     @ManyToOne
     @JoinColumn(name = "order_id", nullable = false)
+    @JsonBackReference(value = "order")
     private Order order;
     @Column(name = "inserted_time", nullable = true)
     private Date insertedTime;

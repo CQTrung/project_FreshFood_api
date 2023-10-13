@@ -18,13 +18,15 @@ import java.util.List;
 
 @Data
 @SuperBuilder
-
+@AllArgsConstructor
 public class OrderDto extends PageDto{
     private long id;
     private String address;
     private BigDecimal totalPrice;
+    private String phone;
+    private String fullName;
     private  int status;
-    private User user;
-    private List<OrderDetail> orderDetails;
-    private List<Payment> payments;
+    private long userId;
+//    private List<OrderDetail> orderDetails;
+//    private List<Payment> payments;
 }

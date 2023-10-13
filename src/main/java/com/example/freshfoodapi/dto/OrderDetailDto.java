@@ -14,11 +14,11 @@ import java.math.BigDecimal;
 
 @Data
 @SuperBuilder
-
+@AllArgsConstructor
 public class OrderDetailDto extends PageDto{
     private long id;
-    private Order order;
-    private Product product;
+    private long productId;
+    private long orderId;
     private int quantity;
     private BigDecimal unitPrice;
 }

@@ -25,7 +25,6 @@ public class Feedback {
     private String subjectName;
     @Column(name = "note", nullable = false)
     private String note;
-
     @OneToOne
     @JoinColumn(name = "user_id")
     @MapsId
