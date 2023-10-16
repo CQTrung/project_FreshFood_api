@@ -9,6 +9,7 @@ import java.util.List;
 public interface ProductService {
     List<ProductResponse> getAll(ProductRequest criteria);
     ProductResponse getProductById(Long id);
-    ProductResponse save(ProductDto ProductDto);
+    ProductResponse save(ProductDto productDto);
+    ProductResponse create(ProductDto productDto);
     boolean delete(Long id);
 }

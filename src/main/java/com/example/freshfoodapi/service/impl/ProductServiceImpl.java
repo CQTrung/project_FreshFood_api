@@ -1,6 +1,5 @@
 package com.example.freshfoodapi.service.impl;
 import com.example.freshfoodapi.dto.ProductDto;
-import com.example.freshfoodapi.dto.ProductDto;
 import com.example.freshfoodapi.dto.request.ProductRequest;
 import com.example.freshfoodapi.dto.response.ProductResponse;
 import com.example.freshfoodapi.entity.*;
@@ -10,7 +9,6 @@ import com.example.freshfoodapi.mapper.ProductMapper;
 import com.example.freshfoodapi.repository.CategoryRepository;
 import com.example.freshfoodapi.repository.ProductRepository;
 import com.example.freshfoodapi.repository.SaleRepository;
-import com.example.freshfoodapi.repository.WarehouseRepository;
 import com.example.freshfoodapi.service.ProductService;
 import com.example.freshfoodapi.spec.ProductSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +31,6 @@ public class ProductServiceImpl implements ProductService {
     CategoryRepository categoryRepository;
     @Autowired
     ProductSpecification specification;
-    @Autowired
-    WarehouseRepository warehouseRepository;
     @Autowired
     SaleRepository saleRepository;
     @Autowired
@@ -68,7 +64,6 @@ public class ProductServiceImpl implements ProductService {
     public ProductResponse save(ProductDto productDto) {
         Optional<Product> productOptional = repository.findById(productDto.getId());
         Optional<Category> categoryOptional = categoryRepository.findById(productDto.getCategoryId());
-        Optional<Warehouse> warehouseOptional = warehouseRepository.findById(productDto.getWarehouseId());
         Optional<Sale> saleOptional = saleRepository.findById(productDto.getSaleId());
         if (productDto.getId() != 0) {
             if (productOptional.isEmpty()){
@@ -84,11 +79,6 @@ public class ProductServiceImpl implements ProductService {
             }
             Category category = categoryOptional.get();
             product.setCategory(category);
-            if (warehouseOptional.isEmpty()){
-                throw new BusinessException("not found warehouse");
-            }
-            Warehouse warehouse= warehouseOptional.get();
-            product.setWarehouse(warehouse);
             if (productDto.getSaleId() != 0){
                 if (saleOptional.isEmpty()){
                     throw new BusinessException("not found sale");
@@ -108,6 +98,24 @@ public class ProductServiceImpl implements ProductService {
         }
         Product result = repository.save(product);
         return mapper.entityToResponse(result);
+    }
+
+    @Override
+    public ProductResponse create(ProductDto productDto) {
+        Product product = mapper.dtoToEntity(productDto);
+        Optional<Category> categoryOptional = categoryRepository.findById(productDto.getCategoryId());
+        if (categoryOptional.isEmpty()){
+            throw new BusinessException("category not found");
+        }
+        Category category = categoryOptional.get();
+        product.setCategory(category);
+        Optional<Sale> saleOptional = saleRepository.findById(productDto.getSaleId());
+        if (saleOptional.isEmpty()){
+            throw new BusinessException("sale not found");
+        }
+        Sale sale = saleOptional.get();
+        product.setSale(sale);
+        return mapper.entityToResponse(product);
     }
 
     @Override

@@ -1,7 +1,6 @@
 package com.example.freshfoodapi.service.impl;
 
 import com.example.freshfoodapi.dto.VoucherDto;
-import com.example.freshfoodapi.entity.Sale;
 import com.example.freshfoodapi.entity.Voucher;
 import com.example.freshfoodapi.exception.BusinessException;
 import com.example.freshfoodapi.mapper.VoucherMapper;

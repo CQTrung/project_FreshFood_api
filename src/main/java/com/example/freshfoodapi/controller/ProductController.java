@@ -70,4 +70,13 @@ public class ProductController extends BaseController{
         }
         return ResponseEntity.ok(false);
     }
+
+    @PostMapping(value = "create")
+    public ResponseEntity<ProductResponse> create(@RequestBody ProductDto productDto, HttpServletRequest request) {
+        if (Objects.isNull(productDto)) {
+            return null;
+        }
+        ProductResponse result = service.create(productDto);
+        return ResponseEntity.ok(result);
+    }
 }

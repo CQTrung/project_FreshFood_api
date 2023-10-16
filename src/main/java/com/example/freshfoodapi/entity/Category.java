@@ -21,7 +21,7 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @SuperBuilder
 
-public class Category implements Serializable {
+public class Category  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")

@@ -18,7 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
-public class Product implements Serializable {
+public class Product  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -36,10 +36,6 @@ public class Product implements Serializable {
     @Column(name = "madeIn")
     private String madeIn;
 
-    @ManyToOne
-    @JoinColumn(name = "warehouse_id")
-    @JsonBackReference(value = "warehouse")
-    private Warehouse warehouse;
 
     @ManyToOne
     @JoinColumn(name = "sale_id")
