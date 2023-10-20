@@ -1,5 +1,6 @@
 package com.example.freshfoodapi.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -42,6 +43,7 @@ public class User {
     private String updatedBy;
 
     @OneToMany(mappedBy = "user")
+    @JsonManagedReference(value = "orderList")
     private List<Order> orderList;
 
     @ManyToMany(mappedBy = "userList",cascade = CascadeType.ALL)

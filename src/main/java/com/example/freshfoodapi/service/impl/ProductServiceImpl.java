@@ -7,6 +7,7 @@ import com.example.freshfoodapi.entity.Product;
 import com.example.freshfoodapi.exception.BusinessException;
 import com.example.freshfoodapi.mapper.ProductMapper;
 import com.example.freshfoodapi.repository.CategoryRepository;
+import com.example.freshfoodapi.repository.ImageRepository;
 import com.example.freshfoodapi.repository.ProductRepository;
 import com.example.freshfoodapi.repository.SaleRepository;
 import com.example.freshfoodapi.service.ProductService;
@@ -17,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -33,6 +35,8 @@ public class ProductServiceImpl implements ProductService {
     ProductSpecification specification;
     @Autowired
     SaleRepository saleRepository;
+    @Autowired
+    ImageRepository imageRepository;
     @Autowired
     ProductMapper mapper;
 
@@ -74,6 +78,19 @@ public class ProductServiceImpl implements ProductService {
             product.setDescription(productDto.getDescription());
             product.setMadeIn(productDto.getMadeIn());
             product.setWeight(productDto.getWeight());
+            List<Long> list = productDto.getImageId();
+            List<Image> images = new ArrayList<>();
+            for (Long imageId : list) {
+                Optional<Image> imageOptional = imageRepository.findById(imageId);
+                if (imageOptional.isEmpty()){
+                    throw  new BusinessException("not found image");
+                }
+                Image image = imageOptional.get();
+                images.add(image);
+                image.setProduct(product);
+//            product.getImages().add(image);
+            }
+            product.setImages(images);
             if(categoryOptional.isEmpty()){
                 throw new BusinessException("not found category");
             }
@@ -89,15 +106,7 @@ public class ProductServiceImpl implements ProductService {
             Product result = repository.save(product);
             return  mapper.entityToResponse(result);
         }
-        Product product = mapper.dtoToEntity(productDto);
-        if (productDto.getSaleId() != 0){
-            if (saleOptional.isEmpty()){
-                throw new BusinessException("not found sale");
-            }
-            product.setSale(saleOptional.get());
-        }
-        Product result = repository.save(product);
-        return mapper.entityToResponse(result);
+        throw  new BusinessException("product id invalid");
     }
 
     @Override
@@ -107,14 +116,32 @@ public class ProductServiceImpl implements ProductService {
         if (categoryOptional.isEmpty()){
             throw new BusinessException("category not found");
         }
+
+        List<Long> list = productDto.getImageId();
+        List<Image> images = new ArrayList<>();
+        for (Long imageId : list) {
+            Optional<Image> imageOptional = imageRepository.findById(imageId);
+            if (imageOptional.isEmpty()){
+                throw  new BusinessException("not found image");
+            }
+            Image image = imageOptional.get();
+            images.add(image);
+            image.setProduct(product);
+//            product.getImages().add(image);
+        }
+        product.setImages(images);
+
         Category category = categoryOptional.get();
         product.setCategory(category);
-        Optional<Sale> saleOptional = saleRepository.findById(productDto.getSaleId());
-        if (saleOptional.isEmpty()){
-            throw new BusinessException("sale not found");
+        if(productDto.getSaleId() != 0){
+            Optional<Sale> saleOptional = saleRepository.findById(productDto.getSaleId());
+            if (saleOptional.isEmpty()){
+                throw new BusinessException("sale not found");
+            }
+            Sale sale = saleOptional.get();
+            product.setSale(sale);
         }
-        Sale sale = saleOptional.get();
-        product.setSale(sale);
+        repository.save(product);
         return mapper.entityToResponse(product);
     }
 

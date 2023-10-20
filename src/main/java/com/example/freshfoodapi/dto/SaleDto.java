@@ -22,5 +22,4 @@ public class SaleDto extends PageDto{
     private String codeSale;
     private Date startDay;
     private Date endDay;
-//    private List<Product> productList;
 }

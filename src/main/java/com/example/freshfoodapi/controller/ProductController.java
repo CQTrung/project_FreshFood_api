@@ -33,7 +33,7 @@ public class ProductController extends BaseController{
         return ResponseEntity.ok(list);
     }
 
-    @PostMapping(value = "save")
+    @PostMapping(value = "update")
     public ResponseEntity<ProductResponse> save(@RequestBody ProductDto productDto, HttpServletRequest request) {
         if (Objects.isNull(productDto)) {
             return null;

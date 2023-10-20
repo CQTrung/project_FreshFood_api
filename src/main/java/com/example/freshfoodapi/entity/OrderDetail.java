@@ -1,5 +1,6 @@
 package com.example.freshfoodapi.entity;
 
+import com.example.freshfoodapi.constant.Status;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,7 +17,7 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@SuperBuilder
+//@SuperBuilder
 public class OrderDetail implements Serializable {
 
 
@@ -34,8 +35,14 @@ public class OrderDetail implements Serializable {
     @JsonBackReference(value = "product")
     private Product product;
 
+    @Column(name = "quantity")
     private int quantity;
-    private BigDecimal unitPrice;
+
+    private BigDecimal totalPrice;
+
+    @Column(name = "status")
+    private Status status;
+
     @Column(name = "inserted_time", nullable = true)
     private Date insertedTime;
     @Column(name = "updated_time", nullable = true)
@@ -47,6 +54,7 @@ public class OrderDetail implements Serializable {
     private void beforeInsert() {
         this.insertedTime = new Date();
         this.isDeleted = false;
+        this.status=Status.WAITING;
     }
     @PreUpdate
     private void beforeUpdate() {

@@ -1,5 +1,6 @@
 package com.example.freshfoodapi.dto.response;
 
+import com.example.freshfoodapi.constant.Status;
 import com.example.freshfoodapi.dto.PageDto;
 import com.example.freshfoodapi.entity.*;
 import lombok.AllArgsConstructor;
@@ -21,5 +22,6 @@ public class OrderDetailResponse extends PageDto {
     private Order order;
     private Product product;
     private int quantity;
-    private BigDecimal unitPrice;
+    private Status status;
+    private BigDecimal totalPrice;
 }

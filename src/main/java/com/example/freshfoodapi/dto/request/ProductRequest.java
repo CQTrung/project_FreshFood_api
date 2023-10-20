@@ -9,15 +9,15 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @Setter
 @AllArgsConstructor
-@SuperBuilder
+//@SuperBuilder
 public class ProductRequest extends PageDto {
     private String name;
     private int price;
     private float weight;
     private String madeIn;
     private long categoryId;
-    private long warehouseId;
     private long saleId;
+    private int quantity;
     private Integer minPrice;
     private Integer maxPrice;
     private Integer minWeight;

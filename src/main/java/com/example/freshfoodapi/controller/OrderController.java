@@ -42,6 +42,18 @@ public class OrderController extends BaseController{
         return null;
     }
 
+    @PostMapping(value = "create")
+    public ResponseEntity<OrderResponse> create(@RequestBody OrderDto orderDto, HttpServletRequest request) {
+        if (Objects.isNull(orderDto)) {
+            return null;
+        }
+        OrderResponse result = service.create(orderDto);
+        if (!Objects.isNull(result)) {
+            return ResponseEntity.ok(result);
+        }
+        return null;
+    }
+
     @GetMapping(value = "detail")
     public ResponseEntity<OrderResponse> getDetail(@RequestParam(required = false) Long id, HttpServletRequest request) {
         if (id == null) {

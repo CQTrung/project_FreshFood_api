@@ -1,6 +1,7 @@
 package com.example.freshfoodapi.controller;
 
 import com.example.freshfoodapi.dto.VoucherDto;
+import com.example.freshfoodapi.dto.request.VoucherAssignToUserRequest;
 import com.example.freshfoodapi.exception.BusinessException;
 import com.example.freshfoodapi.service.impl.VoucherServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,12 @@ public class VoucherController extends BaseController{
         return ResponseEntity.ok(list);
     }
 
+    @GetMapping(value = "list")
+    public ResponseEntity<List<VoucherDto>> list( HttpServletRequest request) {
+        List<VoucherDto> list = service.findVouchersValidNow();
+        return ResponseEntity.ok(list);
+    }
+
     @PostMapping(value = "save")
     public ResponseEntity<VoucherDto> save(@RequestBody VoucherDto voucherDto, HttpServletRequest request) {
         if (Objects.isNull(voucherDto)) {
@@ -40,6 +47,15 @@ public class VoucherController extends BaseController{
             return ResponseEntity.ok(result);
         }
         return null;
+    }
+
+    @PostMapping("assign")
+    public ResponseEntity<?> assignVoucherToUsers(@RequestBody VoucherAssignToUserRequest voucherAssignToUserRequest, HttpServletRequest request) {
+            boolean result = service.assignVoucherToUsers(voucherAssignToUserRequest);
+            if (result) {
+                ResponseEntity.ok(result);
+            }
+            return ResponseEntity.ok(false);
     }
 
     @GetMapping(value = "detail")
@@ -67,4 +83,8 @@ public class VoucherController extends BaseController{
         }
         return ResponseEntity.ok(false);
     }
+
+
+
+
 }

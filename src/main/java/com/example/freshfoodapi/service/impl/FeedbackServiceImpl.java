@@ -2,6 +2,7 @@ package com.example.freshfoodapi.service.impl;
 
 import com.example.freshfoodapi.dto.FeedbackDto;
 import com.example.freshfoodapi.dto.FeedbackDto;
+import com.example.freshfoodapi.dto.response.FeedbackResponse;
 import com.example.freshfoodapi.entity.Feedback;
 import com.example.freshfoodapi.exception.BusinessException;
 import com.example.freshfoodapi.mapper.FeedbackMapper;
@@ -36,17 +37,17 @@ public class FeedbackServiceImpl implements FeedbackService {
     UserService userService;
 
     @Override
-    public List<FeedbackDto> getAll(FeedbackDto criteria) {
+    public List<FeedbackResponse> getAll(FeedbackDto criteria) {
         Pageable pageable = PageRequest.of(criteria.getPageNumber(), criteria.getPageSize());
         Page<Feedback> feedbacks = repository.findAll(specification.filter(criteria), pageable);
         return feedbacks.getContent()
                 .stream()
-                .map(mapper::entityToDto)
+                .map(mapper::entityToResponse)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public FeedbackDto getFeedbackById(Long id) {
+    public FeedbackResponse getFeedbackById(Long id) {
         if (id < 0){
             throw new BusinessException("feedback.invalid");
         }
@@ -56,12 +57,12 @@ public class FeedbackServiceImpl implements FeedbackService {
             throw new BusinessException("Not found feedback");
         }
 
-        FeedbackDto feedbackDto = mapper.entityToDto(feedbackOptional.get());
+        FeedbackResponse feedbackDto = mapper.entityToResponse(feedbackOptional.get());
         return feedbackDto;
     }
 
     @Override
-    public FeedbackDto save(FeedbackDto feedbackDto) {
+    public FeedbackResponse save(FeedbackDto feedbackDto) {
         if (feedbackDto.getId() != 0) {
             Optional<Feedback> feedbackOptional = repository.findById(feedbackDto.getId());
             if (feedbackOptional.isEmpty()){
@@ -70,12 +71,13 @@ public class FeedbackServiceImpl implements FeedbackService {
             Feedback feedback = feedbackOptional.get();
             feedback.setSubjectName(feedbackDto.getSubjectName());
             feedback.setNote(feedbackDto.getNote());
-            feedback.setUser(userService.getUserCurrent());
             repository.save(feedback);
-            return  mapper.entityToDto(feedback);
+            return  mapper.entityToResponse(feedback);
         }
-        Feedback result = repository.save(mapper.dtoToEntity(feedbackDto));
-        return mapper.entityToDto(result);
+        Feedback feedback = mapper.dtoToEntity(feedbackDto);
+        feedback.setUser(userService.getUserCurrent());
+        Feedback result = repository.save(feedback);
+        return mapper.entityToResponse(result);
     }
 
     @Override

@@ -15,7 +15,7 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@SuperBuilder
+//@SuperBuilder
 public class Payment{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,5 +1,6 @@
 package com.example.freshfoodapi.entity;
 
+import com.example.freshfoodapi.constant.Status;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
@@ -26,18 +27,18 @@ public class Order  {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private long id;
-    @Column(name = "fullName")
-    private String fullName;
+    @Column(name = "firstName")
+    private String firstName;
+    @Column(name = "lastName")
+    private String lastName;
     @Column(name = "phone")
     private String phone;
     @Column(name = "address")
     private String address;
     @Column(name = "note")
     private String note;
-    @Column(name = "totalPrice")
-    private BigDecimal totalPrice;
-    @Column(name = "status")
-    private  int status;
+    private BigDecimal unitPrice;
+
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -65,6 +66,7 @@ public class Order  {
     private void beforeInsert() {
         this.insertedTime = new Date();
         this.isDeleted = false;
+
     }
 
     @PreUpdate

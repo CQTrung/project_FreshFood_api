@@ -24,6 +24,8 @@ public class Voucher {
     private String voucherCode;
     @Column(name = "discount")
     private int discount;
+    @Column(name = "status")
+    private int status;
     @Column(name = "startDay")
     private Date startDay;
     @Column(name = "endDay")
@@ -34,6 +36,7 @@ public class Voucher {
             joinColumns = @JoinColumn(name = "voucher_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     private List<User> userList;
+
     @Column(name = "inserted_time", nullable = true)
     private Date insertedTime;
     @Column(name = "updated_time", nullable = true)

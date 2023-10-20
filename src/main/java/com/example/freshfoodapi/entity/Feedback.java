@@ -14,7 +14,7 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@SuperBuilder
+//@SuperBuilder
 public class Feedback {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -7,8 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
-import java.io.Serializable;
-import java.math.BigDecimal;
+
 import java.util.Date;
 import java.util.List;
 
@@ -31,11 +30,16 @@ public class Product  {
     private float weight;
     @Column(name = "description")
     private String description;
-    @Column(name = "image")
-    private String image;
+
     @Column(name = "madeIn")
     private String madeIn;
+    @Column(name = "quantity")
+    private  int quantity;
 
+
+    @OneToMany(mappedBy = "product")
+    @JsonManagedReference(value = "images")
+    private List<Image> images;
 
     @ManyToOne
     @JoinColumn(name = "sale_id")

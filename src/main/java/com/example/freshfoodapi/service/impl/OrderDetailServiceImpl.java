@@ -1,5 +1,6 @@
 package com.example.freshfoodapi.service.impl;
 
+import com.example.freshfoodapi.constant.Status;
 import com.example.freshfoodapi.dto.OrderDetailDto;
 import com.example.freshfoodapi.dto.response.OrderDetailResponse;
 import com.example.freshfoodapi.entity.Order;
@@ -16,9 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -35,6 +36,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
     OrderRepository orderRepository;
     @Autowired
     ProductRepository productRepository;
+
     
     @Override
     public List<OrderDetailResponse> getAll(OrderDetailDto criteria) {
@@ -70,7 +72,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
             }
             OrderDetail orderDetail = orderDetailOptional.get();
             orderDetail.setQuantity(orderDetailDto.getQuantity());
-            orderDetail.setUnitPrice(orderDetailDto.getUnitPrice());
+            orderDetail.setTotalPrice(orderDetailDto.getTotalPrice());
             Optional<Order> orderOptional = orderRepository.findById(orderDetailDto.getOrderId());
             if (orderOptional.isEmpty()){
                 throw  new BusinessException( "not found order");
@@ -82,11 +84,42 @@ public class OrderDetailServiceImpl implements OrderDetailService {
             }
             orderDetail.setProduct(productOptional.get());
 
+            if(orderDetail.getStatus() == Status.COMPLETED && orderDetailDto.getStatus() == Status.CANCEL){
+                throw new BusinessException("Order cannot be cancelled");
+            }
+            if(orderDetail.getStatus() == Status.COMPLETED || orderDetailDto.getStatus() == Status.COMPLETED){
+                BigDecimal price = orderDetailDto.getTotalPrice();
+                int point = price.divide(new BigDecimal("100")).intValue();
+                int op = orderDetail.getOrder().getUser().getPoint();
+                orderDetail.getOrder().getUser().setPoint(op + point);
+            }
+            orderDetail.setStatus(orderDetailDto.getStatus());
             repository.save(orderDetail);
             return  mapper.entityToResponse(orderDetail);
         }
-        OrderDetail result = repository.save(mapper.dtoToEntity(orderDetailDto));
-        return mapper.entityToResponse(result);
+        OrderDetail orderDetail = mapper.dtoToEntity(orderDetailDto);
+        Optional<Order> orderOptional = orderRepository.findById(orderDetailDto.getOrderId());
+        if (orderOptional.isEmpty()){
+            throw  new BusinessException( "not found order");
+        }
+        orderDetail.setOrder(orderOptional.get());
+        Optional<Product> productOptional = productRepository.findById(orderDetailDto.getProductId());
+        if (productOptional.isEmpty()){
+            throw  new BusinessException("not found order");
+        }
+        Product product = productOptional.get();
+        orderDetail.setProduct(product);
+        OrderDetail result = repository.save(orderDetail);
+        int qt =product.getQuantity();
+        int odt = orderDetailDto.getQuantity();
+        int pqt = qt-odt;
+        if (pqt == 0){
+            throw  new BusinessException("product sold out");
+        }
+        product.setQuantity(pqt);
+        productRepository.save(product);
+        OrderDetailResponse response = mapper.entityToResponse(result);
+        return  response;
     }
 
     @Override

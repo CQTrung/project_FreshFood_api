@@ -1,5 +1,6 @@
 package com.example.freshfoodapi.service.impl;
 
+import com.example.freshfoodapi.constant.Status;
 import com.example.freshfoodapi.dto.OrderDto;
 import com.example.freshfoodapi.dto.OrderDto;
 import com.example.freshfoodapi.dto.response.OrderDetailResponse;
@@ -68,17 +69,30 @@ public class OrderServiceImpl implements OrderService {
                 throw new BusinessException("not found Order");
             }
             Order order = orderOptional.get();
-            order.setTotalPrice(orderDto.getTotalPrice());
-            order.setFullName(orderDto.getFullName());
+            order.setUnitPrice(orderDto.getUnitPrice());
+            order.setFirstName(orderDto.getFirstName());
+            order.setLastName(orderDto.getLastName());
             order.setPhone(orderDto.getPhone());
             order.setAddress(orderDto.getAddress());
+
             repository.save(order);
             return  mapper.entityToResponse(order);
         }
-        orderDto.setUserId(userService.getUserCurrent().getId());
         Order result = repository.save(mapper.dtoToEntity(orderDto));
         return mapper.entityToResponse(result);
     }
+
+    @Override
+    public OrderResponse create(OrderDto orderDto) {
+        Order order = mapper.dtoToEntity(orderDto);
+        orderDto.setUserId(userService.getUserCurrent().getId());
+        User user = userRepository.getById(orderDto.getUserId());
+        order.setUser(user);
+        Order result = repository.save(order);
+        OrderResponse response = mapper.entityToResponse(result);
+        return response;
+    }
+
 
     @Override
     public boolean delete(Long id) {

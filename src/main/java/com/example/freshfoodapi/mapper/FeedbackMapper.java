@@ -2,6 +2,7 @@ package com.example.freshfoodapi.mapper;
 
 
 import com.example.freshfoodapi.dto.FeedbackDto;
+import com.example.freshfoodapi.dto.response.FeedbackResponse;
 import com.example.freshfoodapi.entity.Feedback;
 import org.mapstruct.Mapper;
 
@@ -10,5 +11,6 @@ import org.mapstruct.Mapper;
 public interface FeedbackMapper {
     Feedback dtoToEntity(FeedbackDto a);
     FeedbackDto entityToDto(Feedback a);
+    FeedbackResponse entityToResponse(Feedback a);
 }
 

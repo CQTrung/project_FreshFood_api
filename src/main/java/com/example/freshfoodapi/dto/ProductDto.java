@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -18,6 +20,6 @@ public class ProductDto extends PageDto{
     private String image;
     private String madeIn;
     private long categoryId;
-    private long warehouseId;
     private long saleId;
+    private List<Long> imageId;
 }

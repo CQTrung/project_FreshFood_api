@@ -1,5 +1,6 @@
 package com.example.freshfoodapi.dto;
 
+import com.example.freshfoodapi.constant.Status;
 import com.example.freshfoodapi.entity.Order;
 import com.example.freshfoodapi.entity.Product;
 import lombok.AllArgsConstructor;
@@ -20,5 +21,6 @@ public class OrderDetailDto extends PageDto{
     private long productId;
     private long orderId;
     private int quantity;
-    private BigDecimal unitPrice;
+    private Status status;
+    private BigDecimal totalPrice;
 }

@@ -14,4 +14,5 @@ public class VoucherDto extends PageDto{
     private int discount;
     private Date startDay;
     private Date endDay;
+    private int status;
 }

@@ -1,6 +1,7 @@
 package com.example.freshfoodapi.controller;
 
 import com.example.freshfoodapi.dto.FeedbackDto;
+import com.example.freshfoodapi.dto.response.FeedbackResponse;
 import com.example.freshfoodapi.exception.BusinessException;
 import com.example.freshfoodapi.service.impl.FeedbackServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,24 +19,24 @@ public class FeedbackController extends BaseController{
     FeedbackServiceImpl service;
 
     @PostMapping(value = "")
-    public ResponseEntity<List<FeedbackDto>> gets(@RequestBody FeedbackDto criteria, HttpServletRequest request) {
+    public ResponseEntity<List<FeedbackResponse>> gets(@RequestBody FeedbackDto criteria, HttpServletRequest request) {
         if (criteria.getPageSize() == null || criteria.getPageSize() <= 0) {
             criteria.setPageSize(commonProperties.getPageSize());
         }
         if (criteria.getPageNumber() == null || criteria.getPageNumber() < 0) {
             criteria.setPageNumber(commonProperties.getPageNumber());
         }
-        List<FeedbackDto> list = service.getAll(criteria);
+        List<FeedbackResponse> list = service.getAll(criteria);
 
         return ResponseEntity.ok(list);
     }
 
     @PostMapping(value = "save")
-    public ResponseEntity<FeedbackDto> save(@RequestBody FeedbackDto feedbackDto, HttpServletRequest request) {
+    public ResponseEntity<FeedbackResponse> save(@RequestBody FeedbackDto feedbackDto, HttpServletRequest request) {
         if (Objects.isNull(feedbackDto)) {
             return null;
         }
-        FeedbackDto result = service.save(feedbackDto);
+        FeedbackResponse result = service.save(feedbackDto);
         if (!Objects.isNull(result)) {
             return ResponseEntity.ok(result);
         }
@@ -43,16 +44,11 @@ public class FeedbackController extends BaseController{
     }
 
     @GetMapping(value = "detail")
-    public ResponseEntity<?> getDetail(@RequestParam(required = false) Long id, HttpServletRequest request) {
+    public ResponseEntity<FeedbackResponse> getDetail(@RequestParam(required = false) Long id, HttpServletRequest request) {
         if (id == null) {
             throw new BusinessException("400","id invalid");
         }
-        FeedbackDto feedbackDto = service.getFeedbackById(id);
-
-        if (Objects.isNull(feedbackDto)) {
-            return ResponseEntity.ok("not data");
-        }
-
+        FeedbackResponse feedbackDto = service.getFeedbackById(id);
         return ResponseEntity.ok(feedbackDto);
     }
 

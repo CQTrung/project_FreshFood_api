@@ -1,7 +1,10 @@
 package com.example.freshfoodapi.dto.response;
 
+import com.example.freshfoodapi.constant.Status;
 import com.example.freshfoodapi.dto.PageDto;
+import com.example.freshfoodapi.dto.UserDto;
 import com.example.freshfoodapi.entity.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,8 +28,5 @@ public class OrderResponse extends PageDto {
     private String address;
     private String note;
     private BigDecimal totalPrice;
-    private  int status;
-    private User user;
-    private List<OrderDetail> orderDetails;
-    private List<Payment> payments;
+    private UserDto user;
 }
