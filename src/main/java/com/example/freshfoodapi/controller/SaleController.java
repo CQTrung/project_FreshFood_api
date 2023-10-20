@@ -1,8 +1,7 @@
 package com.example.freshfoodapi.controller;
 
 import com.example.freshfoodapi.dto.SaleDto;
-import com.example.freshfoodapi.properties.CommonProperties;
-import com.example.freshfoodapi.service.SaleService;
+import com.example.freshfoodapi.exception.BusinessException;
 import com.example.freshfoodapi.service.impl.SaleServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,13 +12,10 @@ import java.util.List;
 import java.util.Objects;
 
 @RestController
-@RequestMapping(value = "api/v1/sale")
-public class SaleController {
+@RequestMapping(value = "api/v1/sale/")
+public class SaleController extends BaseController{
     @Autowired
-    SaleService service;
-
-    @Autowired
-    CommonProperties commonProperties;
+    SaleServiceImpl service;
 
     @PostMapping(value = "")
     public ResponseEntity<List<SaleDto>> gets(@RequestBody SaleDto criteria, HttpServletRequest request) {
@@ -29,45 +25,46 @@ public class SaleController {
         if (criteria.getPageNumber() == null || criteria.getPageNumber() < 0) {
             criteria.setPageNumber(commonProperties.getPageNumber());
         }
-        List<SaleDto> SaleDtoList = service.findAll(criteria);
+        List<SaleDto> list = service.getAll(criteria);
 
-        return ResponseEntity.ok(SaleDtoList);
+        return ResponseEntity.ok(list);
     }
 
-    @GetMapping(value = "/detail")
-    public ResponseEntity<?> get(@RequestParam(required = false) Long id, HttpServletRequest request) {
-        if (id == null) {
-            return ResponseEntity.ok("not data");
+    @PostMapping(value = "save")
+    public ResponseEntity<SaleDto> save(@RequestBody SaleDto saleDto, HttpServletRequest request) {
+        if (Objects.isNull(saleDto)) {
+            return null;
         }
-        SaleDto Sale = service.getsaleById(id);
-        if (Objects.isNull(Sale)) {
-            return ResponseEntity.ok("not data");
-        }
-        return ResponseEntity.ok(Sale);
-    }
-
-    @PostMapping(value = "/save")
-    public ResponseEntity<?> save(@RequestBody SaleDto SaleDto, HttpServletRequest request) {
-        if (Objects.isNull(SaleDto)) {
-            return ResponseEntity.ok("not data");
-        }
-        SaleDto result = service.save(SaleDto);
+        SaleDto result = service.save(saleDto);
         if (!Objects.isNull(result)) {
             return ResponseEntity.ok(result);
         }
-        return ResponseEntity.ok("not data");
+        return null;
     }
 
-    @PostMapping(value = "/delete")
-    public ResponseEntity<?> delete(@RequestBody SaleDto SaleDto, HttpServletRequest request) {
-        if (Objects.isNull(SaleDto)) {
-            return ResponseEntity.ok(false);
+    @GetMapping(value = "detail")
+    public ResponseEntity<?> getDetail(@RequestParam(required = false) Long id, HttpServletRequest request) {
+        if (id == null) {
+            throw new BusinessException("400","id invalid");
         }
-        boolean result = service.delete(SaleDto.getId());
-        if (result) {
+        SaleDto saleDto = service.getSaleById(id);
+
+        if (Objects.isNull(saleDto)) {
+            return ResponseEntity.ok("not data");
+        }
+
+        return ResponseEntity.ok(saleDto);
+    }
+
+    @DeleteMapping(value ="delete")
+    public ResponseEntity<?> delete(@RequestParam(required = false,value = "id") Long id, HttpServletRequest request) {
+        if (id == null) {
+            throw new BusinessException("400","id invalid");
+        }
+        boolean result = service.delete(id);
+        if(result){
             return ResponseEntity.ok(result);
         }
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(false);
     }
-
 }

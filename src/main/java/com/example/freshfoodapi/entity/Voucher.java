@@ -20,10 +20,12 @@ public class Voucher {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private long id;
-    @Column(name = "voucherCode")
+    @Column(name = "voucherCode",unique = true)
     private String voucherCode;
-    @Column(name = "value")
-    private Float value;
+    @Column(name = "discount")
+    private int discount;
+    @Column(name = "status")
+    private int status;
     @Column(name = "startDay")
     private Date startDay;
     @Column(name = "endDay")
@@ -34,6 +36,7 @@ public class Voucher {
             joinColumns = @JoinColumn(name = "voucher_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     private List<User> userList;
+
     @Column(name = "inserted_time", nullable = true)
     private Date insertedTime;
     @Column(name = "updated_time", nullable = true)

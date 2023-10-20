@@ -17,21 +17,6 @@ public class VoucherSpecification {
         return  (root, criteriaQuery, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
             predicates.add(criteriaBuilder.isFalse(root.get("isDeleted")));
-
-            if (criteria.getStartDay() != null) {
-                // Add a condition to filter by start time if provided
-                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("startDay"), criteria.getStartDay()));
-            }
-
-            if (criteria.getEndDay() != null) {
-                // Add a condition to filter by end time if provided
-                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("endDay"), criteria.getEndDay()));
-            }
-
-            if (StringUtils.isNotEmpty(criteria.getVoucherCode())) {
-                predicates.add(criteriaBuilder.like(criteriaBuilder.upper(root.get("voucherCode")), "%" + criteria.getVoucherCode() + "%"));
-            }
-
             return criteriaBuilder.and(predicates.stream()
                     .toArray(Predicate[]::new));
         };

@@ -3,13 +3,22 @@ package com.example.freshfoodapi.service.impl;
 
 import com.example.freshfoodapi.config.ServiceProperties;
 import com.example.freshfoodapi.dto.LoginResponseDto;
+import com.example.freshfoodapi.dto.UserDto;
+import com.example.freshfoodapi.dto.UserDto;
 import com.example.freshfoodapi.entity.Role;
 import com.example.freshfoodapi.entity.User;
+import com.example.freshfoodapi.entity.User;
+import com.example.freshfoodapi.exception.BusinessException;
+import com.example.freshfoodapi.mapper.UserMapper;
 import com.example.freshfoodapi.repository.RoleRepository;
 import com.example.freshfoodapi.repository.UserRepository;
 import com.example.freshfoodapi.security.config.UserDetailsImpl;
 import com.example.freshfoodapi.service.UserService;
+import com.example.freshfoodapi.spec.UserSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -23,6 +32,7 @@ import org.springframework.web.client.RestTemplate;
 import javax.mail.MessagingException;
 import javax.transaction.Transactional;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl extends A_Service implements UserService {
@@ -35,43 +45,34 @@ public class UserServiceImpl extends A_Service implements UserService {
     @Autowired
     RoleRepository roleRepository;
 
+    @Autowired
+    UserMapper mapper;
+
+    @Autowired
+    UserSpecification specification;
+
     List<User> users;
     private RestTemplate restTemplate = new RestTemplate();
     @Autowired
     private UserService userService;
 
-    private void test1() {
-        String url = serviceProperties.getBaseUrl() + serviceProperties.getClassroomListUrl();
-
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add("Content-Type", "application/json"); // set header
-        httpHeaders.add("Authorization", "Bearer + token"); // set token
-        User user = new User();
-
-        user.setUsername("demo");
-        user.setPassword("demo");
-
-        HttpEntity entity = new HttpEntity<>(user, httpHeaders);
-
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
-        System.out.println(response.getBody());
-    }
-
-
-    //    static {
-//        User user1 = new User(1, "admin1", "admin@123", "admin1@gmail.com", "234234234");
-//        user1.setRoles(new String[]{"ROLE_ADMIN"});
+//    private void test1() {
+//        String url = serviceProperties.getBaseUrl() + serviceProperties.getClassroomListUrl();
 //
-//        User user2 = new User(2, "admin2", "admin@123", "admin2@gmail.com", "222222222");
-//        user2.setRoles(new String[]{"ROLE_USER"});
+//        HttpHeaders httpHeaders = new HttpHeaders();
+//        httpHeaders.add("Content-Type", "application/json"); // set header
+//        httpHeaders.add("Authorization", "Bearer + token"); // set token
+//        User user = new User();
 //
-//        User user3 = new User(3, "admin3", "admin@123", "admin3@gmail.com", "233333333");
-//        user3.setRoles(new String[]{"ROLE_ADMIN", "ROLE_USER"});
+//        user.setUsername("demo");
+//        user.setPassword("demo");
 //
-//        users.add(user1);
-//        users.add(user2);
-//        users.add(user3);
+//        HttpEntity entity = new HttpEntity<>(user, httpHeaders);
+//
+//        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
+//        System.out.println(response.getBody());
 //    }
+
     @Async
     public void sendMessage(String message) {
         try {
@@ -95,8 +96,22 @@ public class UserServiceImpl extends A_Service implements UserService {
     }
 
     @Override
-    public List<User> gets() {
-        return repository.findAll();
+    public List<UserDto> gets(UserDto criteria) {
+        Pageable pageable = PageRequest.of(criteria.getPageNumber(), criteria.getPageSize());
+        Page<User> vouchers = repository.findAll(specification.filter(criteria), pageable);
+        return vouchers.getContent()
+                .stream()
+                .map(mapper::entityToDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public UserDto getDetail(Long id) {
+        Optional<User> userOptional = repository.findById(id);
+        if (userOptional.isEmpty()){
+            throw new BusinessException("Not found user");
+        }
+        return mapper.entityToDto(userOptional.get());
     }
 
     @Override

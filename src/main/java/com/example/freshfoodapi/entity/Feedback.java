@@ -14,7 +14,7 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@SuperBuilder
+//@SuperBuilder
 public class Feedback {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +25,6 @@ public class Feedback {
     private String subjectName;
     @Column(name = "note", nullable = false)
     private String note;
-
     @OneToOne
     @JoinColumn(name = "user_id")
     @MapsId

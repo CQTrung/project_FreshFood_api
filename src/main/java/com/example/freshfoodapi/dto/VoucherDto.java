@@ -1,21 +1,18 @@
 package com.example.freshfoodapi.dto;
 
-import com.example.freshfoodapi.entity.User;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-
 import java.util.Date;
-import java.util.List;
 
 @Data
-@NoArgsConstructor
 @SuperBuilder
+@AllArgsConstructor
 public class VoucherDto extends PageDto{
     private long id;
     private String voucherCode;
-    private Float value;
+    private int discount;
     private Date startDay;
     private Date endDay;
-    private List<User> userList;
+    private int status;
 }

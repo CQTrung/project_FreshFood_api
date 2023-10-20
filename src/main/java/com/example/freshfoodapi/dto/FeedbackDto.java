@@ -1,12 +1,17 @@
 package com.example.freshfoodapi.dto;
 
+
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+
 
 @Data
-@Builder
-@NoArgsConstructor
-public class FeedbackDto {
+@SuperBuilder
+@AllArgsConstructor
+public class FeedbackDto extends PageDto{
+    private long id;
+    private String subjectName;
+    private String note;
+    private long userId;
 }

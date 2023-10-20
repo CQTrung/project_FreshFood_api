@@ -2,6 +2,7 @@ package com.example.freshfoodapi.service;
 
 
 import com.example.freshfoodapi.dto.LoginResponseDto;
+import com.example.freshfoodapi.dto.UserDto;
 import com.example.freshfoodapi.entity.User;
 
 import java.util.List;
@@ -27,7 +28,9 @@ public interface UserService {
 
     User getUserCurrent();
 
-    List<User> gets();
+    List<UserDto> gets(UserDto userDto);
+
+    UserDto getDetail(Long id);
 
     User findUserById(Long id);
 

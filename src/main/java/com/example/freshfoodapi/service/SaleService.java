@@ -5,8 +5,8 @@ import com.example.freshfoodapi.dto.SaleDto;
 import java.util.List;
 
 public interface SaleService {
-    SaleDto save(SaleDto coachDto);
-    List<SaleDto> findAll(SaleDto criteria);
-    SaleDto getsaleById(Long id);
+    List<SaleDto>getAll(SaleDto criteria);
+    SaleDto getSaleById(Long id);
+    SaleDto save(SaleDto SaleDto);
     boolean delete(Long id);
 }

@@ -2,6 +2,7 @@ package com.example.freshfoodapi.service.impl;
 
 import com.example.freshfoodapi.dto.SaleDto;
 import com.example.freshfoodapi.entity.Sale;
+import com.example.freshfoodapi.exception.BusinessException;
 import com.example.freshfoodapi.mapper.SaleMapper;
 import com.example.freshfoodapi.repository.SaleRepository;
 import com.example.freshfoodapi.service.SaleService;
@@ -19,49 +20,58 @@ import java.util.stream.Collectors;
 @Service
 public class SaleServiceImpl implements SaleService {
     @Autowired
-    private SaleRepository repository;
+    SaleRepository repository;
     @Autowired
-    private SaleMapper mapper;
+    SaleSpecification specification;
     @Autowired
-    private SaleSpecification specification;
-
+    SaleMapper mapper;
 
     @Override
-    public SaleDto save(SaleDto saleDto) {
-        if (saleDto.getId() != 0) {
-            Optional<Sale> saleFindById = repository.findById(saleDto.getId());
-            if (saleFindById.isEmpty()){
-                return  null;
-            }
-            saleDto.setCodeSale(saleFindById.get().getCodeSale());
-            saleDto.setPersent(saleFindById.get().getPersent());
-            saleDto.setStartDay(saleFindById.get().getStartDay());
-            saleDto.setEndDay(saleFindById.get().getEndDay());
-        }
-
-        Sale result = repository.save(mapper.dtoToEntity(saleDto));
-        return mapper.entityToDto(result);
-    }
-
-    @Override
-    public List<SaleDto> findAll(SaleDto criteria) {
+    public List<SaleDto> getAll(SaleDto criteria) {
         Pageable pageable = PageRequest.of(criteria.getPageNumber(), criteria.getPageSize());
-        Page<Sale> sales = repository.findAll(specification.filter(criteria), pageable);
-        return sales.getContent()
+        Page<Sale> Sales = repository.findAll(specification.filter(criteria), pageable);
+        return Sales.getContent()
                 .stream()
                 .map(mapper::entityToDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public SaleDto getsaleById(Long id) {
-        Optional<Sale> saleOptional = repository.findById(id);
-        if (saleOptional.isEmpty()) {
-            // Handle the case when the sale is not found.
-            return null; // Or throw an exception, return an empty saleDto, etc.
+    public SaleDto getSaleById(Long id) {
+        if (id < 0){
+            throw new BusinessException("sale.invalid");
         }
+
+        Optional<Sale> saleOptional = repository.findById(id);
+        if(saleOptional.isEmpty()){
+            throw new BusinessException("Not found sale");
+        }
+
         SaleDto saleDto = mapper.entityToDto(saleOptional.get());
         return saleDto;
+    }
+
+    @Override
+    public SaleDto save(SaleDto saleDto) {
+        if (saleDto.getId() != 0) {
+            Optional<Sale> saleOptional = repository.findById(saleDto.getId());
+            if (saleOptional.isEmpty()){
+                throw new BusinessException("not found sale");
+            }
+            Sale sale = saleOptional.get();
+            sale.setCodeSale(saleDto.getCodeSale());
+            sale.setDiscount(saleDto.getDiscount());
+            sale.setStartDay(saleDto.getStartDay());
+            sale.setEndDay(saleDto.getEndDay());
+            repository.save(sale);
+            return  mapper.entityToDto(sale);
+        }
+        Sale sale = repository.findByCodeSaleAndIsDeletedFalse(saleDto.getCodeSale());
+        if(sale != null){
+            throw  new BusinessException("code sale does exist");
+        }
+        Sale result = repository.save(mapper.dtoToEntity(saleDto));
+        return mapper.entityToDto(result);
     }
 
     @Override
@@ -69,15 +79,14 @@ public class SaleServiceImpl implements SaleService {
         if (id == null) {
             return false;
         }
-
-        Optional<Sale> saleFindById = repository.findById(id);
-        if (saleFindById.isEmpty()){
+        Optional<Sale> saleOptional = repository.findById(id);
+        if (saleOptional.isEmpty()){
             return  false;
         }
-        Sale sale = saleFindById.get();
+        Sale sale = saleOptional.get();
         sale.setIsDeleted(true);
-        Sale result = repository.save(sale);
+        repository.save(sale);
         return true;
-
     }
+
 }

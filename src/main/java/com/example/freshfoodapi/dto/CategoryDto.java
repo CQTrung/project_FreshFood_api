@@ -4,9 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Data
-@Builder
-@NoArgsConstructor
-public class CategoryDto {
+@SuperBuilder
+@AllArgsConstructor
+public class CategoryDto extends PageDto{
+    private  long id;
+    private  String name;
 }
