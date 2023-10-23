@@ -2,6 +2,7 @@ package com.example.freshfoodapi.controller;
 
 import com.example.freshfoodapi.entity.Role;
 import com.example.freshfoodapi.entity.User;
+import com.example.freshfoodapi.exception.BusinessException;
 import com.example.freshfoodapi.repository.RoleRepository;
 import com.example.freshfoodapi.repository.UserRepository;
 import com.example.freshfoodapi.security.config.UserDetailsImpl;
@@ -53,9 +54,7 @@ public class LoginController extends BaseController {
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
         if (!userRepository.existsByUsername(loginRequest.getUsername())) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new MessageResponse("Error:account does not exist"));
+            throw  new BusinessException("404" , "account does not exist");
         }
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));

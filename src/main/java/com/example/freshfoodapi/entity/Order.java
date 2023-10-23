@@ -37,6 +37,8 @@ public class Order  {
     private String address;
     @Column(name = "note")
     private String note;
+    @Column(name = "quantity")
+    private  String quantity;
     private BigDecimal unitPrice;
 
 
