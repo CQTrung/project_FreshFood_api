@@ -2,6 +2,7 @@ package com.example.freshfoodapi.controller;
 
 import com.example.freshfoodapi.dto.UserDto;
 import com.example.freshfoodapi.dto.VoucherDto;
+import com.example.freshfoodapi.email.EmailService;
 import com.example.freshfoodapi.entity.User;
 import com.example.freshfoodapi.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,8 @@ import java.util.List;
 public class UserController extends BaseController {
     @Autowired
     UserService service;
+    @Autowired
+    EmailService emailService;
 
 
     @GetMapping(value = "/list")
@@ -70,4 +73,11 @@ public class UserController extends BaseController {
         User updatedUser = service.save(user);
         return ResponseEntity.ok(updatedUser);
     }
+
+    @PostMapping("send-voucher")
+    public ResponseEntity<?> sendVoucher(@RequestParam("voucherId") long voucherId) {
+        service.sendVouchersToUsersWithHighPoints(voucherId);
+        return ResponseEntity.ok("successfully");
+    }
+
 }

@@ -35,4 +35,6 @@ public interface UserService {
     User findUserById(Long id);
 
     User save(User user);
+
+     void sendVouchersToUsersWithHighPoints(long voucherId);
 }

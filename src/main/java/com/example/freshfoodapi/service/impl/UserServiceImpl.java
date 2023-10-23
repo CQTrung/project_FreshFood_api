@@ -5,13 +5,16 @@ import com.example.freshfoodapi.config.ServiceProperties;
 import com.example.freshfoodapi.dto.LoginResponseDto;
 import com.example.freshfoodapi.dto.UserDto;
 import com.example.freshfoodapi.dto.UserDto;
+import com.example.freshfoodapi.email.EmailService;
 import com.example.freshfoodapi.entity.Role;
 import com.example.freshfoodapi.entity.User;
 import com.example.freshfoodapi.entity.User;
+import com.example.freshfoodapi.entity.Voucher;
 import com.example.freshfoodapi.exception.BusinessException;
 import com.example.freshfoodapi.mapper.UserMapper;
 import com.example.freshfoodapi.repository.RoleRepository;
 import com.example.freshfoodapi.repository.UserRepository;
+import com.example.freshfoodapi.repository.VoucherRepository;
 import com.example.freshfoodapi.security.config.UserDetailsImpl;
 import com.example.freshfoodapi.service.UserService;
 import com.example.freshfoodapi.spec.UserSpecification;
@@ -39,6 +42,7 @@ public class UserServiceImpl extends A_Service implements UserService {
 
     @Autowired
     ServiceProperties serviceProperties;
+
     @Autowired
     UserRepository repository;
 
@@ -51,8 +55,16 @@ public class UserServiceImpl extends A_Service implements UserService {
     @Autowired
     UserSpecification specification;
 
+    @Autowired
+    private EmailService emailService;
+
+    @Autowired
+    private VoucherRepository voucherRepository;
+
     List<User> users;
     private RestTemplate restTemplate = new RestTemplate();
+
+
     @Autowired
     private UserService userService;
 
@@ -216,5 +228,32 @@ public class UserServiceImpl extends A_Service implements UserService {
 //        String token = JWTUtils.genToken(users.get(0));
 //        System.err.println(jwtUtils.getExpireDateFormToken(token));
 //    }
+
+
+//    public void updateUserPoints(Long userId, int newPoints) {
+//        User user = repository.findById(userId).orElse(null);
+//        if (user != null) {
+//            user.setPoint(newPoints);
+//            repository.save(user);
+//            emailService.sendEmailIfUserHasHighPoints(user);
+//        }
+//    }
+
+    public void sendEmailsToUsersWithHighPoints() {
+        List<User> users = repository.findAll();
+        emailService.sendEmailToUsersWithHighPoints(users);
+    }
+
+    public void sendVouchersToUsersWithHighPoints(long voucherId) {
+        List<User> users = repository.findAll();
+        for (User user : users) {
+            if (user.getPoint() > 1000) {
+                Voucher voucher = voucherRepository.getById(voucherId);
+                emailService.sendEmailWithVoucher(user, voucher);
+            }
+        }
+    }
+
+
 
 }
