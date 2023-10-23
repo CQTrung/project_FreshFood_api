@@ -52,6 +52,11 @@ public class LoginController extends BaseController {
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
+        if (!userRepository.existsByUsername(loginRequest.getUsername())) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Error:account does not exist"));
+        }
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
@@ -59,10 +64,6 @@ public class LoginController extends BaseController {
         String jwt = jwtUtils.generateJwtToken(authentication);
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-
-        // if (!userDetails.isEmailVerified()) {
-        //     return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is not verified!"));
-        // }
 
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(item -> item.getAuthority())
