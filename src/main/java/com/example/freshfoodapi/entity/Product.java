@@ -33,6 +33,7 @@ public class Product  {
 
     @Column(name = "madeIn")
     private String madeIn;
+
     @Column(name = "quantity")
     private  int quantity;
 
