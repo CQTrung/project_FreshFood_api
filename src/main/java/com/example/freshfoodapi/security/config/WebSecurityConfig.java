@@ -58,7 +58,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
                 .antMatchers("/api/v1/login**", "/api/v1/signup**", "/api/v1/verify-email**").permitAll()
-                .antMatchers(HttpMethod.GET,"/api/v1/product**").permitAll();
+                .antMatchers(HttpMethod.GET,"/api/v1/product**").permitAll()
+                .antMatchers(HttpMethod.GET,"/api/v1/category**").permitAll()
+                .antMatchers(HttpMethod.GET,"/api/v1/voucher**").permitAll()
+                .antMatchers(HttpMethod.GET,"/api/v1/order**").permitAll()
+                .antMatchers(HttpMethod.GET,"/api/v1/payment**").permitAll()
+                .antMatchers(HttpMethod.GET,"/api/v1/feedback**").permitAll()
+                .antMatchers(HttpMethod.GET,"/api/v1/order-detail**").permitAll();
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 }
