@@ -44,7 +44,7 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     @JsonManagedReference(value = "orderList")
-    private List<Order> orderList;
+    private List<OrderDetail> orderDetails;
 
     @ManyToMany(mappedBy = "userList",cascade = CascadeType.ALL)
     private List<Voucher> voucherList;

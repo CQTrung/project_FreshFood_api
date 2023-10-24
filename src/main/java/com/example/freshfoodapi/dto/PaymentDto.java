@@ -13,10 +13,9 @@ import javax.persistence.ManyToOne;
 
 @Data
 @SuperBuilder
-
+@AllArgsConstructor
+@NoArgsConstructor
 public class PaymentDto extends PageDto{
     private long id;
     private String paymentMethod;
-    private  int status;
-    private Order order;
 }

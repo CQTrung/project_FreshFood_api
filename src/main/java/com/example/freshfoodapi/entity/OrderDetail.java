@@ -2,6 +2,7 @@ package com.example.freshfoodapi.entity;
 
 import com.example.freshfoodapi.constant.Status;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,6 +12,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 @Entity()
 @Table(name = "order_details")
@@ -25,15 +27,18 @@ public class OrderDetail implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @ManyToOne
-    @JoinColumn(name = "order_id", nullable = false)
-    @JsonBackReference(value = "order")
-    private Order order;
+    @OneToMany(mappedBy = "orderDetail")
+    @JsonManagedReference(value = "orders")
+    private List<Order> orders;
 
     @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false)
-    @JsonBackReference(value = "product")
-    private Product product;
+    @JoinColumn(name = "user_id", nullable = false)
+    @JsonBackReference(value = "user")
+    private User user;
+
+    @OneToOne
+    @JoinColumn(name = "payment_id")
+    private Payment payment;
 
     @Column(name = "quantity")
     private int quantity;

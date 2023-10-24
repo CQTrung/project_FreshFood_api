@@ -52,9 +52,11 @@ public class Product  {
     @JsonBackReference(value = "category")
     private Category category;
 
-    @OneToMany(mappedBy = "product")
-    @JsonManagedReference(value = "orderDetailList")
-    private List<OrderDetail> orderDetailList;
+    @ManyToOne
+    @JoinColumn(name = "order_id")
+    @JsonBackReference(value = "order")
+    private Order order;
+
 
     @Column(name = "inserted_time", nullable = true)
     private Date insertedTime;

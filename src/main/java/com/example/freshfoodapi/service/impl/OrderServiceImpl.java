@@ -1,14 +1,13 @@
 package com.example.freshfoodapi.service.impl;
 
-import com.example.freshfoodapi.constant.Status;
 import com.example.freshfoodapi.dto.OrderDto;
-import com.example.freshfoodapi.dto.OrderDto;
-import com.example.freshfoodapi.dto.response.OrderDetailResponse;
 import com.example.freshfoodapi.dto.response.OrderResponse;
-import com.example.freshfoodapi.entity.*;
+import com.example.freshfoodapi.entity.Order;
+import com.example.freshfoodapi.entity.Product;
 import com.example.freshfoodapi.exception.BusinessException;
 import com.example.freshfoodapi.mapper.OrderMapper;
 import com.example.freshfoodapi.repository.OrderRepository;
+import com.example.freshfoodapi.repository.ProductRepository;
 import com.example.freshfoodapi.repository.UserRepository;
 import com.example.freshfoodapi.service.OrderService;
 import com.example.freshfoodapi.service.UserService;
@@ -35,6 +34,8 @@ public class OrderServiceImpl implements OrderService {
     UserRepository userRepository;
     @Autowired
     UserService userService;
+    @Autowired
+    ProductRepository productRepository;
 
     @Override
     public List<OrderResponse> getAll(OrderDto criteria) {
@@ -63,20 +64,30 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderResponse save(OrderDto orderDto) {
+        Optional<Order> orderOptional = repository.findById(orderDto.getId());
+        Order order = orderOptional.get();
         if (orderDto.getId() != 0) {
-            Optional<Order> orderOptional = repository.findById(orderDto.getId());
             if (orderOptional.isEmpty()){
                 throw new BusinessException("not found Order");
             }
-            Order order = orderOptional.get();
             order.setUnitPrice(orderDto.getUnitPrice());
             order.setFirstName(orderDto.getFirstName());
             order.setLastName(orderDto.getLastName());
             order.setPhone(orderDto.getPhone());
             order.setAddress(orderDto.getAddress());
+            order.setQuantity(orderDto.getQuantity());
 
             repository.save(order);
-            return  mapper.entityToResponse(order);
+            return mapper.entityToResponse(order);
+        }
+
+        List<Long> productIds = orderDto.getProductId();
+        for (Long productId : productIds) {
+            Optional<Product> productOptional = productRepository.findById(productId);
+            if (productOptional.isEmpty()) {
+                throw new BusinessException("product not found");
+            }
+            order.getProducts().add(productOptional.get());
         }
         Order result = repository.save(mapper.dtoToEntity(orderDto));
         return mapper.entityToResponse(result);
@@ -85,9 +96,10 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderResponse create(OrderDto orderDto) {
         Order order = mapper.dtoToEntity(orderDto);
-        orderDto.setUserId(userService.getUserCurrent().getId());
-        User user = userRepository.getById(orderDto.getUserId());
-        order.setUser(user);
+        List<Long> productIds = orderDto.getProductId();
+        List<Product> products = productRepository.findAllById(productIds);
+        // Add the fetched products to the order
+        order.setProducts(products);
         Order result = repository.save(order);
         OrderResponse response = mapper.entityToResponse(result);
         return response;

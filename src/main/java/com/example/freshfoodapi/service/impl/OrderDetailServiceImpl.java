@@ -3,15 +3,15 @@ package com.example.freshfoodapi.service.impl;
 import com.example.freshfoodapi.constant.Status;
 import com.example.freshfoodapi.dto.OrderDetailDto;
 import com.example.freshfoodapi.dto.response.OrderDetailResponse;
-import com.example.freshfoodapi.entity.Order;
-import com.example.freshfoodapi.entity.OrderDetail;
-import com.example.freshfoodapi.entity.Product;
+import com.example.freshfoodapi.entity.*;
 import com.example.freshfoodapi.exception.BusinessException;
 import com.example.freshfoodapi.mapper.OrderDetailMapper;
 import com.example.freshfoodapi.repository.OrderDetailRepository;
 import com.example.freshfoodapi.repository.OrderRepository;
+import com.example.freshfoodapi.repository.PaymentRepository;
 import com.example.freshfoodapi.repository.ProductRepository;
 import com.example.freshfoodapi.service.OrderDetailService;
+import com.example.freshfoodapi.service.UserService;
 import com.example.freshfoodapi.spec.OrderDetailSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -36,6 +37,10 @@ public class OrderDetailServiceImpl implements OrderDetailService {
     OrderRepository orderRepository;
     @Autowired
     ProductRepository productRepository;
+    @Autowired
+    UserService userService;
+    @Autowired
+    PaymentRepository paymentRepository;
 
     
     @Override
@@ -70,54 +75,64 @@ public class OrderDetailServiceImpl implements OrderDetailService {
             if (orderDetailOptional.isEmpty()){
                 throw new BusinessException("not found OrderDetail");
             }
+
             OrderDetail orderDetail = orderDetailOptional.get();
             orderDetail.setQuantity(orderDetailDto.getQuantity());
             orderDetail.setTotalPrice(orderDetailDto.getTotalPrice());
-            Optional<Order> orderOptional = orderRepository.findById(orderDetailDto.getOrderId());
-            if (orderOptional.isEmpty()){
-                throw  new BusinessException( "not found order");
-            }
-            orderDetail.setOrder(orderOptional.get());
-            Optional<Product> productOptional = productRepository.findById(orderDetailDto.getProductId());
-            if (productOptional.isEmpty()){
-                throw  new BusinessException("not found order");
-            }
-            orderDetail.setProduct(productOptional.get());
 
+            List<Long> orderIds = orderDetailDto.getOrderId();
+            for (Long orderId : orderIds){
+            Optional<Order> orderOptional = orderRepository.findById(orderId);
+                if (orderOptional.isEmpty()){
+                    throw  new BusinessException( "not found order");
+                }
+                orderDetail.getOrders().add(orderOptional.get());
+            }
             if(orderDetail.getStatus() == Status.COMPLETED && orderDetailDto.getStatus() == Status.CANCEL){
                 throw new BusinessException("Order cannot be cancelled");
             }
             if(orderDetail.getStatus() == Status.COMPLETED || orderDetailDto.getStatus() == Status.COMPLETED){
                 BigDecimal price = orderDetailDto.getTotalPrice();
                 int point = price.divide(new BigDecimal("100")).intValue();
-                int op = orderDetail.getOrder().getUser().getPoint();
-                orderDetail.getOrder().getUser().setPoint(op + point);
+                int op = orderDetail.getUser().getPoint();
+                orderDetail.getUser().setPoint(op + point);
             }
             orderDetail.setStatus(orderDetailDto.getStatus());
             repository.save(orderDetail);
             return  mapper.entityToResponse(orderDetail);
         }
+        //create
         OrderDetail orderDetail = mapper.dtoToEntity(orderDetailDto);
-        Optional<Order> orderOptional = orderRepository.findById(orderDetailDto.getOrderId());
-        if (orderOptional.isEmpty()){
-            throw  new BusinessException( "not found order");
+
+        for (Long orderId : orderDetailDto.getOrderId()){
+            Optional<Order> orderOptional = orderRepository.findById(orderId);
+            if (orderOptional.isEmpty()){
+                throw  new BusinessException( "not found order");
+            }
+            Order order = orderOptional.get();
+             for (Product product :order.getProducts()){
+                int qt =product.getQuantity();
+                int odt = orderDetailDto.getQuantity();
+                int pqt = qt-odt;
+                if (pqt == 0){
+                    throw  new BusinessException("product sold out");
+                }
+                product.setQuantity(pqt);
+                productRepository.save(product);
+            }
+             orderDetail.getOrders().add(orderOptional.get());
         }
-        orderDetail.setOrder(orderOptional.get());
-        Optional<Product> productOptional = productRepository.findById(orderDetailDto.getProductId());
-        if (productOptional.isEmpty()){
-            throw  new BusinessException("not found order");
+        Optional<Payment> paymentOptional = paymentRepository.findById(orderDetailDto.getPaymentId());
+        if (paymentOptional.isEmpty()){
+            throw new BusinessException("not found payment");
         }
-        Product product = productOptional.get();
-        orderDetail.setProduct(product);
+        orderDetail.setPayment(paymentOptional.get());
+
+        User user = userService.getUserCurrent();
+        orderDetail.setUser(user);
+
         OrderDetail result = repository.save(orderDetail);
-        int qt =product.getQuantity();
-        int odt = orderDetailDto.getQuantity();
-        int pqt = qt-odt;
-        if (pqt == 0){
-            throw  new BusinessException("product sold out");
-        }
-        product.setQuantity(pqt);
-        productRepository.save(product);
+
         OrderDetailResponse response = mapper.entityToResponse(result);
         return  response;
     }

@@ -2,6 +2,7 @@ package com.example.freshfoodapi.dto.response;
 
 import com.example.freshfoodapi.constant.Status;
 import com.example.freshfoodapi.dto.PageDto;
+import com.example.freshfoodapi.dto.ProductDto;
 import com.example.freshfoodapi.dto.UserDto;
 import com.example.freshfoodapi.entity.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -23,10 +24,12 @@ import java.util.List;
 @SuperBuilder
 public class OrderResponse extends PageDto {
     private long id;
-    private String fullName;
+    private String firstName;
+    private String lastName;
     private String phone;
     private String address;
     private String note;
-    private BigDecimal totalPrice;
-    private UserDto user;
+    private int quantity;
+    private BigDecimal unitPrice;
+    private List<ProductDto>product;
 }

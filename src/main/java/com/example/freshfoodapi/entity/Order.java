@@ -37,21 +37,20 @@ public class Order  {
     private String address;
     @Column(name = "note")
     private String note;
+    @Column(name = "quantity")
+    private int quantity;
+
     private BigDecimal unitPrice;
+
+    @OneToMany(mappedBy = "order")
+    @JsonManagedReference(value = "products")
+    private List<Product> products;
 
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    @JsonBackReference(value = "user")
-    private User user;
-
-    @OneToMany(mappedBy = "order")
-    @JsonManagedReference(value = "orderDetails")
-    private List<OrderDetail> orderDetails;
-
-    @OneToMany(mappedBy = "order")
-    @JsonManagedReference(value = "payments")
-    private List<Payment> payments;
+    @JoinColumn(name = "orderDetail_id")
+    @JsonBackReference(value = "order")
+    private OrderDetail orderDetail;
 
     @Column(name = "inserted_time", nullable = true)
     private Date insertedTime;

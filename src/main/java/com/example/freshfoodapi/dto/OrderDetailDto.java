@@ -12,14 +12,15 @@ import lombok.experimental.SuperBuilder;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import java.math.BigDecimal;
+import java.util.List;
 
 @Data
 @SuperBuilder
 @AllArgsConstructor
 public class OrderDetailDto extends PageDto{
     private long id;
-    private long productId;
-    private long orderId;
+    private List<Long>orderId;
+    private long paymentId;
     private int quantity;
     private Status status;
     private BigDecimal totalPrice;

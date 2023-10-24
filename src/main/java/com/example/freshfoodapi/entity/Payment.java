@@ -15,20 +15,16 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-//@SuperBuilder
+@SuperBuilder
 public class Payment{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private long id;
-    @Column(name = "payment_method", nullable = false)
+
+    @Column(name = "payment_method")
     private String paymentMethod;
-    @Column(name = "status")
-    private  int status;
-    @ManyToOne
-    @JoinColumn(name = "order_id", nullable = false)
-    @JsonBackReference(value = "order")
-    private Order order;
+
     @Column(name = "inserted_time", nullable = true)
     private Date insertedTime;
     @Column(name = "updated_time", nullable = true)
@@ -36,6 +32,9 @@ public class Payment{
 
     @Column(name = "isDeleted", nullable = true)
     private Boolean isDeleted;
+
+    @OneToOne(mappedBy = "payment", cascade = CascadeType.ALL)
+    private OrderDetail  orderDetail;
 
     @PrePersist
     private void beforeInsert() {
